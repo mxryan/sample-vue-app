@@ -1,7 +1,7 @@
 <template>
   <div id="user-table">
     <h3>Click a field to edit.</h3>
-    <el-table :data="users" height="250" ref="userTable" class="user-table">
+    <el-table :data="users" ref="userTable" class="user-table">
       <el-table-column label="Name" min-width="180">
         <editable-cell :show-input="row.editMode" slot-scope="{row}" v-model="row.name">
           <span slot="content">{{row.name}}</span>
@@ -23,6 +23,7 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-button id="add-row-btn" @click="addRow(users)">Add a row</el-button>
   </div>
 </template>
 
@@ -42,8 +43,19 @@ export default {
   },
   methods: {
     deleteRow(index, rows) {
-      rows.splice(index, 1);
-    }
+      if (confirm("Are you sure you want to remove this row?")){
+        rows.splice(index, 1);
+      }
+      
+    },
+    addRow(rows) {
+      rows.push({
+        name: "Click to edit",
+        username: "Click to edit",
+        email: "Click to edit",
+        editMode: false
+      });
+    },
   },
   mounted() {
     axios.get("https://jsonplaceholder.typicode.com/users").then(res => {
@@ -66,7 +78,10 @@ export default {
   cursor: pointer;
 }
 .user-table {
-  width: 90%;
+  width: 100%;
   margin: auto;
+}
+#add-row-btn {
+  margin-top: 5px;
 }
 </style>
